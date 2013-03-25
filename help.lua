@@ -8,18 +8,22 @@
 do
 -- sample shorthelp and longhelp
 local shorthelp = [[
+
 The following functions are provided:
    help
-Try `help"topic"`, e.g. help"all", or `help(function)`, e.g. `help(help)`.]]
+Try `help"topic"`, e.g. help"all", or `help(function)`, e.g. `help(help)`.
+]]
 
 local longhelp = {
 method = [[
+
 `debug.getinfo(fct).source` contains the Lua source code of `fct`,
 or the name of the file from which it was loaded, or the information
 that it is precompiled C code. If the actual source is available,
 a docstring (see `help"docstring"`) is extracted.
 ]],
 bugs = [[
+
 If the source code is read from a file that you are editing, the
 version from which the docstring is extracted may be more recent
 than the version you have loaded.
@@ -37,6 +41,7 @@ docstring = [[
 -- the standalone Lua interpreter.
 ]],
 customize = [[
+
 After `help(arg,msg)`, where `arg` is nil or any string except `all`, 
 the message you get when typing `help(arg)` will be `msg`.
 ]]
