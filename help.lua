@@ -33,7 +33,7 @@ docstring = [[
 -- A comment block from the Lua code of a function, formatted in LDoc
 -- style, like this block. The comments may come immediately before the 
 -- first line of the function or anywhere inside it.  All comments must 
--- start at position of their lines and the first comment must start 
+-- start at position 1 of their lines and the first comment must start 
 -- with at least three hyphens. For a very short function, the whole 
 -- code is used as the docstring. 
 --
@@ -56,7 +56,7 @@ local starts_with_three_hyphens = "^%-%-%-"
 local only_hyphens_at_least_three = "^%-%-(%-)+$"
 local nohelp = "No help available"
 local code={}
-local shortenough = 80
+local shortenough = 12 -- number of lines in longest self-documenting routine
 
 local docstring = function(fct)
 ---   docstring(fct)
@@ -149,7 +149,8 @@ local help = function(fct,...)
    elseif select('#',...)>0 then 
       print('help cannot be redefined for '..tostring(fct))
    elseif fct=='all' then
-      print (fold("Help available on these topics:  "..topics(longhelp)))
+      print ('Help available via `help"topic"` on these topics:\n  '..
+         fold(topics(longhelp)))
    elseif longhelp[fct] then print(longhelp[fct])   
    elseif type(fct)=="table" then 
       if type(fct.help)=='string' then print(fct.help)
