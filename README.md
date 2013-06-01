@@ -19,4 +19,11 @@ and do what it says.
 Alternatively, include the help source in your application and provide 
 your own `shorthelp` string and `longhelp` table.
 
+With an existing LDoc-compatible module, e.g. Microlight:
+
+    $ lua -l ml -l help
+    help(ml)
+
+and take it from there.
+
 

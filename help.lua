@@ -4,7 +4,6 @@
 --$ lua -l help
 --help()
 
-
 do
 -- sample shorthelp and longhelp
 local shorthelp = [[
@@ -46,6 +45,7 @@ After `help(arg,msg)`, where `arg` is nil or any string except `all`,
 the message you get when typing `help(arg)` will be `msg`.
 ]]
 }
+local helpless = "No help available, try help(%s)."
 --
 
 ------------------ no changes needed after this line ------------------
@@ -115,11 +115,15 @@ local docstring = function(fct)
    return helptext 
 end
 
+local function utflen(s)
+   return #s:gsub("[\xC0-\xEF][\x80-\xBF]*",'.')
+end
+
 local fold
 fold = function(s)
 --- Primitive word-wrap function. If you want to use it independently, 
 -- remove the line declaring it to be local.
-  if #s<=72 then return s end
+  if utflen(s)<=72 then return s end
   local n=74
   while n>50 do n=n-1; if s:sub(n,n):match"%s" then break end end
   return s:sub(1,n-1)..'\n    '..fold(s:sub(n+1))
@@ -127,7 +131,9 @@ end
 
 local topics = function (tbl,prefix)
    local t={}
-   for k in pairs(tbl) do t[#t+1]=(prefix or '')..k end   
+   for k in pairs(tbl) do if type(k)=='string' then 
+      t[#t+1]=(prefix or '')..k
+   end end  
    table.sort(t)
    return table.concat(t,' ')
 end
@@ -138,27 +144,34 @@ local help = function(fct,...)
 -- function: Prints the docstring of `fct`, if any.
 -- table: Prints `help` field, if any; else contents.
 -- string: Prints help on the topic, if any.
--- "all": Prints available topics. 
-   local helptext
-   local dump = string.dump
-   if select('#',...)>1 then print('Too many arguments: try `help(help)`')
-   elseif type(fct)=='string' and fct~='all' and select('#',...)==1 then
-      longhelp[fct]=...
-   elseif fct==nil then 
-      if select('#',...)>0 then shorthelp=... else print(shorthelp) end
-   elseif select('#',...)>0 then 
-      print('help cannot be redefined for '..tostring(fct))
-   elseif fct=='all' then
-      print ('Help available via `help"topic"` on these topics:\n  '..
-         fold(topics(longhelp)))
-   elseif longhelp[fct] then print(longhelp[fct])   
-   elseif type(fct)=="table" then 
-      if type(fct.help)=='string' then print(fct.help)
-      else print(fold("Contents: "..topics(fct)))
-      end
-   elseif type(fct)=='function' then print(docstring(fct) or nohelp)
-   else print("Don't know how to find help for "..tostring(fct))
+-- "all": Prints available topics.
+--     help(fct,string)
+-- Redefines what you will get from `help(fct)`
+--     help(fct,0)
+-- (or anything except a string) don't print help, return it instead 
+   if select('#',...)>1 then 
+      print('Too many arguments: try `help(help)`'); return
    end
+   local helptext
+   local redefine = select('#',...)==1 and type(select(1,...))=='string'
+   local printme = select('#',...)==0
+   if fct==nil then 
+      if redefine then shorthelp=... else helptext=shorthelp end
+   elseif fct=='all' then
+      if redefine then print"help cannot be redefined for 'all'"; return
+      else helptext='Help available via `help"topic"` on these topics:\n  '..
+         fold(topics(longhelp))
+      end
+   elseif redefine then longhelp[fct]=...
+   elseif longhelp[fct] then help=longhelp[fct]
+   elseif type(fct)=="table" then 
+      if type(fct.help)=='string' then helptext=fct.help
+      else helptext=fold("Contents: "..topics(fct))
+      end
+   elseif type(fct)=='function' then helptext=docstring(fct) or nohelp
+   else print(helpless:format(fct)); return
+   end
+   if printme then print(helptext) else return helptext end
 end
 
 return help
