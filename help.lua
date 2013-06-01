@@ -145,17 +145,21 @@ local help = function(fct,...)
 -- table: Prints `help` field, if any; else contents.
 -- string: Prints help on the topic, if any.
 -- "all": Prints available topics.
---     help(fct,string)
+--     help(topic,false)
+-- Removes topic from "all"
+--     help(fct,"newhelp")
 -- Redefines what you will get from `help(fct)`
 --     help(fct,0)
--- (or anything except a string) don't print help, return it instead 
+-- (or anything else) don't print help, return it instead 
    if select('#',...)>1 then 
       print('Too many arguments: try `help(help)`'); return
    end
    local helptext
    local redefine = select('#',...)==1 and type(select(1,...))=='string'
+   local kill = select(1,...)==false
    local printme = select('#',...)==0
-   if fct==nil then 
+   if kill then longhelp[fct]=nil
+   elseif fct==nil then 
       if redefine then shorthelp=... else helptext=shorthelp end
    elseif fct=='all' then
       if redefine then print"help cannot be redefined for 'all'"; return
@@ -163,7 +167,7 @@ local help = function(fct,...)
          fold(topics(longhelp))
       end
    elseif redefine then longhelp[fct]=...
-   elseif longhelp[fct] then help=longhelp[fct]
+   elseif longhelp[fct] then helptext=longhelp[fct]
    elseif type(fct)=="table" then 
       if type(fct.help)=='string' then helptext=fct.help
       else helptext=fold("Contents: "..topics(fct))
@@ -172,7 +176,7 @@ local help = function(fct,...)
    else print(helpless:format(fct)); return
    end
    if printme then print(helptext) else return helptext end
-end
+end 
 
 return help
 
