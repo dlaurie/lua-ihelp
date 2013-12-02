@@ -118,7 +118,7 @@ local docstring = function(fct)
 end
 
 -- assumes validity of UTF8 encoding
-local function utflen(s) return #s:gsub("[\xC0-\xEF][\x80-\xBF]*",'.') end
+local function utflen(s) return #s:gsub("[\192-\239][\128-\191]*",'.') end
 
 local fold
 fold = function(s)
@@ -126,7 +126,6 @@ fold = function(s)
   if utflen(s)<=72 then return s end
   local n=74
   while n>60 do n=n-1; if s:find("^%s",n) then break end end
-  end
   return s:sub(1,n-1)..'\n    '..fold(s:sub(n+1))
 end  
 
