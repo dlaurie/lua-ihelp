@@ -117,17 +117,16 @@ local docstring = function(fct)
    return helptext 
 end
 
-local function utflen(s)
-   return #s:gsub("[\xC0-\xEF][\x80-\xBF]*",'.')
-end
+-- assumes validity of UTF8 encoding
+local function utflen(s) return #s:gsub("[\xC0-\xEF][\x80-\xBF]*",'.') end
 
 local fold
 fold = function(s)
---- Primitive word-wrap function. If you want to use it independently, 
--- remove the line declaring it to be local.
+--- Primitive word-wrap function. 
   if utflen(s)<=72 then return s end
   local n=74
-  while n>60 do n=n-1; if s:sub(n,n):match"%s" then break end end
+  while n>60 do n=n-1; if s:find("^%s",n) then break end end
+  end
   return s:sub(1,n-1)..'\n    '..fold(s:sub(n+1))
 end  
 
