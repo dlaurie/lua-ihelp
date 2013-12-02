@@ -1,13 +1,12 @@
-lua-ihelp
-=========
+Lua interactive help
+====================
 
-Interactive help for Lua programs. Copy `help.lua` to somewhere in
-your Lua module path.
+Copy `ihelp.lua` to somewhere in your Lua module path.
 
 To get started:
 
-    $ lua -l help
-    help()
+    $ lua -e "help = require'ihelp'"
+    > help()
 
 To customize it for your application: 
 
@@ -16,8 +15,8 @@ To customize it for your application:
 
 and do what it says.
 
-Alternatively, include the help source in your application and provide 
-your own `shorthelp` string and `longhelp` table.
+Alternatively, copy the help source into your own application and 
+provide your own `shorthelp` string and `longhelp` table.
 
 With an existing LDoc-compatible module, e.g. Microlight:
 
@@ -26,4 +25,6 @@ With an existing LDoc-compatible module, e.g. Microlight:
 
 and take it from there.
 
+The module used to be called `help` but it seems `help.lua` is a popular
+filename. [Project homepage](https://github.com/dlaurie/lua-ihelp)
 
