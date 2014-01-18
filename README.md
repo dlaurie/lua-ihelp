@@ -11,17 +11,17 @@ To get started:
 To customize it for your application: 
 
     $ lua -l help
-    help"customize"
+    > help"customize"
 
 and do what it says.
 
 Alternatively, copy the help source into your own application and 
 provide your own `shorthelp` string and `longhelp` table.
 
-With an existing LDoc-compatible module, e.g. Microlight:
+With an existing LDoc-compatible module, e.g. `ml` (Microlight):
 
     $ lua -l ml -l help
-    help(ml)
+    > help(ml)
 
 and take it from there.
 
