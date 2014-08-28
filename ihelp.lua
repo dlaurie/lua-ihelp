@@ -11,7 +11,7 @@ local       getinfo,    open,       insert,       concat,       sort =
       debug.getinfo, io.open, table.insert, table.concat, table.sort 
 local pairs, select, type = pairs, select, type
 local utf8len, offset = utf8 and utf8.len, utf8 and utf8.offset
-if not offset then offset = function(...) return ... end end
+if not offset then offset = function(str,n) return n end end
 
 -- sample shorthelp and longhelp
 local shorthelp = [[
