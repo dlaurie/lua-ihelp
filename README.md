@@ -10,8 +10,8 @@ To get started:
 
 To customize it for your application: 
 
-    $ lua -l help
-    > help"customize"
+    $ lua -l ihelp
+    > ihelp"customize"
 
 and do what it says.
 
@@ -20,8 +20,8 @@ provide your own `shorthelp` string and `longhelp` table.
 
 With an existing LDoc-compatible module, e.g. `ml` (Microlight):
 
-    $ lua -l ml -l help
-    > help(ml)
+    $ lua -l ml -l ihelp
+    > ihelp(ml)
 
 and take it from there.
 
